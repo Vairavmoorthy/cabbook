@@ -1,0 +1,139 @@
+<div class="row mt-4 ml-2">
+
+    <div class="col-md-6">
+        <form (ngSubmit)='bookCab(f)' #f='ngForm'>
+
+
+            <div class="form-group">
+                <label for="pickup"><strong>Enter Pickup Location</strong></label>
+                <input type="text" class="form-control" id='pickup' name='pickuplocation' ngModel #pickup required
+                    autocorrect='false' autocapitalize='false' spellcheck="false" required>
+                
+                    <div class="alert alert-danger" *ngIf='pickup.touched && pickup.invalid'>
+                    pickup location is required
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="destination"><strong>Enter Destination Location</strong></label>
+                <input type="text" class="form-control" id='destination' name='destination' #destination required
+                autocorrect='false' autocapitalize='false' spellcheck="false" ngModel>
+                <div class="alert alert-danger" *ngIf='destination.touched &&  destination.invalid'>
+                    destination is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="radio-inline"><input type="radio" value="" name='cartype' value='micro' ngModel required><strong>Micro</strong></label>
+
+                <label class="radio-inline ml-2"><input type="radio" value="mini" name='cartype' ngModel required>
+                    <strong>Mini</strong></label>
+
+                <label class="radio-inline ml-2"><input type="radio" value="primesedan" name='cartype' ngModel required><strong>Prime
+                        Sedan</strong></label>
+
+                <label class="radio-inline ml-2"><input type="radio" value="primesuv" name='cartype' ngModel required><strong>Prime
+                        Suv</strong></label>
+            </div>
+
+            <button class="btn btn-success btn-lg btn-block" type='button'
+            [disabled]='f.invalid' (click)='getEstimate(f.value)'  >Get Estimate
+                Of Your ride</button>
+
+
+           <div *ngIf='isEstimate'>    
+            <div class='row size1 mt-3'>
+                <div class="col-md-1"></div>
+                <div class="col-md-5 mark">
+                    <h5>Distance : {{distance}}km</h5>
+                </div>
+                <div class="col-md-5 mark ">
+                    <h5>Estimated Fare : {{totalfare |currency:"₹"}}</h5>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-1">
+
+                </div>
+                <div class="col-md-5 ">
+                  <button class="btn btn-primary btn-lg btn-block mr-2" type='submit'>
+                      Book Now
+                  </button>
+                </div>
+                <div class="col-md-5">
+                     <button class='btn btn-danger btn-lg btn-block ml-2' type='button' (click)=cancel(f)>Cancel</button>
+                </div>
+                <div class="col-md-1 ">
+
+                </div>
+            </div>
+        </div> 
+
+
+        </form>
+
+    </div>
+
+
+    <div class="col-md-6">
+        <agm-map [latitude]='lat' [longitude]='lon' [zoom]='zoom' [scrollwheel]="false">
+
+            <agm-direction [origin]='origin1' [destination]='destination1' [renderOptions]='renderOption'
+                [markerOptions]='markerOption' [travelMode]='travelMode'>
+
+            </agm-direction>
+
+            <agm-marker [latitude]='driver.lat' [longitude]='driver.lon' [iconUrl]=
+            "'https://olawebcdn.com/images/v1/cabs/sl/ic_micro.png'"
+            *ngFor='let driver of appService.driverArray'>
+
+            </agm-marker>
+
+
+
+
+        </agm-map>
+
+    </div>
+
+
+
+
+</div>
+<div class="row">
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" [hidden]='true' #modalbutton>
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Your booking is conformed !!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <h5>Pickup Location : {{userService.driverPickup}}</h5>
+         <br>
+         <h5>Destination : {{userService.driverDestination}}</h5>
+         <br>
+         <h5>Driver Name : {{userService.driverName}}</h5>
+         <br>
+         <h5>Driver Contact : {{userService.driverContact}}</h5>
+         <br>
+         <h5>Total Fare :{{userService.totalfare}}</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
